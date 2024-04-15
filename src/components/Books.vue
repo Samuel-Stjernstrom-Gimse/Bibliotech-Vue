@@ -73,6 +73,7 @@ const postBook = async () => {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 1rem;
+    color: aliceblue;
 }
 #book {
     background-color: #646cff;
