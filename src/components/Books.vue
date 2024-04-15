@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
+import Book from './Book.vue'
 
 const books = ref([])
 const author = ref('')
@@ -61,10 +62,7 @@ const postBook = async () => {
     </div>
     <div id="book-wrapper">
         <div id="book" v-for="book in books" :key="book.id">
-            <h4>{{ book.title }}</h4>
-            <h4>{{ book.id }}</h4>
-            <h4>{{ book.author }}</h4>
-            <h4>{{ book.year }}</h4>
+            <Book :id="book.id" :author="book.author" :year="book.year" :title="book.title" />
         </div>
     </div>
 </template>
