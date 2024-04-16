@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import Book from './Book.vue'
+import { BookType } from '../helpers/types.ts'
 
-const books = ref([])
+const books = ref<BookType[]>([])
 const author = ref('')
 const title = ref('')
 const year = ref()
@@ -20,8 +21,8 @@ const fetchBooks = async () => {
     }
 }
 
-onMounted(() => {
-    fetchBooks()
+onMounted(async () => {
+    await fetchBooks()
 })
 
 const postBook = async () => {
@@ -52,7 +53,6 @@ const postBook = async () => {
     }
 }
 </script>
-
 <template>
     <div>
         <input v-model="title" placeholder="Title" type="text" />
@@ -62,7 +62,7 @@ const postBook = async () => {
     </div>
     <div id="book-wrapper">
         <div id="book" v-for="book in books" :key="book.id">
-            <Book :id="book.id" :author="book.author" :year="book.year" :title="book.title" />
+            <Book :id="book.id" :author="book.author" :year="book.year" :title="book.title" :fetch-books="fetchBooks" />
         </div>
     </div>
 </template>
@@ -73,6 +73,7 @@ const postBook = async () => {
     grid-gap: 1rem;
     color: aliceblue;
 }
+
 #book {
     background-color: #646cff;
 }
