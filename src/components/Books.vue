@@ -75,6 +75,6 @@ const postBook = async () => {
 }
 
 #book {
-    background-color: #646cff;
+    background-color: rgba(17, 17, 17, 0.24);
 }
 </style>
