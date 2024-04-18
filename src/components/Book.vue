@@ -6,6 +6,8 @@ const props = defineProps({
     author: String,
     year: Number,
     id: Number,
+    user: Object,
+    book: Object,
     fetchBooks: {
         type: Function as () => Promise<void>,
         required: true
@@ -14,20 +16,21 @@ const props = defineProps({
 
 const rentBook = async (id: number, userId: number) => {
     try {
-        if (!id) {
-            console.error(' 404 book not found: ', id)
-            return
-        }
-
+        const bookingDate = new Date().toISOString() // Get current date/time in ISO format
+        const returnDate = new Date().toISOString()
         const newRent = {
-            booking_id: 0,
+            booking_id: 120,
             user_id: userId,
+            user: props.user,
             book_id: id,
-            booking_date: Date.now(),
-            return_date: new Date()
+            book: props.book,
+            booking_date: bookingDate, // This will send a timestamp in milliseconds
+            return_date: returnDate // This will send the current date and time
         }
 
-        const response = await fetch(`http://localhost:5000/books/rent${id}`, {
+        console.log(newRent)
+
+        const response = await fetch(`http://localhost:5000/booking/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -37,9 +40,11 @@ const rentBook = async (id: number, userId: number) => {
 
         if (response.ok) {
             console.log('success')
+        } else {
+            console.log('Failed to rent the book:', response.statusText)
         }
     } catch (error) {
-        console.log('error')
+        console.log('Error renting the book:', error)
     }
 }
 
@@ -72,7 +77,7 @@ const deleteBook = async (id: number) => {
         <h4>{{ props.author }}</h4>
         <h4>{{ props.year }}</h4>
         <button @click="deleteBook(props.id!)">Delete Book</button>
-        <button @click="rentBook(props.id!, props.id!)">Rent Book </button>
+        <button @click="rentBook(props.id!, props.userId!)">Rent Book</button>
     </div>
 </template>
 

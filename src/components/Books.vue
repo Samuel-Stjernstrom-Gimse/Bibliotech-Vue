@@ -4,6 +4,7 @@ import Book from './Book.vue'
 import { BookType } from '../helpers/types.ts'
 
 const books = ref<BookType[]>([])
+const users = ref<BookType[]>([])
 const author = ref('')
 const title = ref('')
 const year = ref()
@@ -22,8 +23,23 @@ const fetchBooks = async () => {
     }
 }
 
+const fetchUsers = async () => {
+    try {
+        const response = await fetch('http://localhost:5000/users', {
+            mode: 'cors'
+        })
+
+        const data = await response.json()
+        console.log('Data:', data)
+        users.value = data
+    } catch (error) {
+        console.error('Error fetching books:', error)
+    }
+}
+
 onMounted(async () => {
     await fetchBooks()
+    await fetchUsers()
 })
 
 const postBook = async () => {
@@ -65,8 +81,16 @@ const postBook = async () => {
         <button @click="postBook">Add Book</button>
     </div>
     <div id="book-wrapper">
-        <div id="book" v-for="book in books" :key="book.id">
-            <Book :id="book.id" :author="book.author" :year="book.year" :title="book.title" :fetch-books="fetchBooks" />
+        <div id="book" v-for="(book, index) in books" :key="book.id">
+            <Book
+                :id="book.book_id"
+                :author="book.author"
+                :year="book.year"
+                :title="book.title"
+                :user="users[index]"
+                :book="book"
+                :fetch-books="fetchBooks"
+            />
         </div>
     </div>
 </template>
