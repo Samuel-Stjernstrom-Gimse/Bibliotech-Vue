@@ -72,7 +72,7 @@ const deleteBook = async (id: number) => {
         <h4>{{ props.author }}</h4>
         <h4>{{ props.year }}</h4>
         <button @click="deleteBook(props.id!)">Delete Book</button>
-        <button>Rent Book</button>
+        <button @click="rentBook(props.id!, props.id!)">Rent Book </button>
     </div>
 </template>
 

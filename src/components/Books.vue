@@ -13,6 +13,7 @@ const fetchBooks = async () => {
         const response = await fetch('http://localhost:5000/book', {
             mode: 'cors'
         })
+
         const data = await response.json()
         console.log('Data:', data)
         books.value = data
@@ -41,6 +42,7 @@ const postBook = async () => {
             },
             body: JSON.stringify(newBook)
         })
+
         if (response.ok) {
             await fetchBooks()
             title.value = ''
