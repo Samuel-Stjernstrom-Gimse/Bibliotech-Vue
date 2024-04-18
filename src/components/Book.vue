@@ -5,32 +5,61 @@ const props = defineProps({
     title: String,
     author: String,
     year: Number,
-    id: String,
-    fetchBooks: Function as () => () => Promise<void> // Define fetchBooks as a function returning Promise<void>
+    id: Number,
+    fetchBooks: {
+        type: Function as () => Promise<void>,
+        required: true
+    }
 })
 
-const deleteBook = async (id: string) => {
+const rentBook = async (id: number, userId: number) => {
     try {
-        // Check if ID is valid
+        if (!id) {
+            console.error(' 404 book not found: ', id)
+            return
+        }
+
+        const newRent = {
+            booking_id: 0,
+            user_id: userId,
+            book_id: id,
+            booking_date: Date.now(),
+            return_date: new Date()
+        }
+
+        const response = await fetch(`http://localhost:5000/books/rent${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newRent)
+        })
+
+        if (response.ok) {
+            console.log('success')
+        }
+    } catch (error) {
+        console.log('error')
+    }
+}
+
+const deleteBook = async (id: number) => {
+    try {
         if (!id) {
             console.error('Invalid book ID')
             return
         }
 
-        // Send DELETE request to delete the book
         const response = await fetch(`http://localhost:5000/book/${id}`, {
             method: 'DELETE'
         })
 
         if (response.ok) {
-            // Call fetchBooks function after successful deletion
-            await (props.fetchBooks as () => Promise<void>)() // Assert and await fetchBooks
+            await (props.fetchBooks as () => Promise<void>)()
         } else {
-            // Handle unsuccessful DELETE request
             console.error('Failed to delete book')
         }
     } catch (error) {
-        // Handle network errors or other exceptions
         console.error('Error deleting book:', error)
     }
 }
@@ -42,7 +71,8 @@ const deleteBook = async (id: string) => {
         <h4>{{ props.id }}</h4>
         <h4>{{ props.author }}</h4>
         <h4>{{ props.year }}</h4>
-        <button @click="deleteBook(props.id)">Delete Book</button>
+        <button @click="deleteBook(props.id!)">Delete Book</button>
+        <button>Rent Book</button>
     </div>
 </template>
 

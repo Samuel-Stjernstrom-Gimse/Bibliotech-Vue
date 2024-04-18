@@ -27,6 +27,7 @@ onMounted(async () => {
 
 const postBook = async () => {
     const newBook = {
+        id: Math.random() * 10,
         title: title.value.toUpperCase(),
         author: author.value.toUpperCase(),
         year: parseInt(year.value)
@@ -41,7 +42,7 @@ const postBook = async () => {
             body: JSON.stringify(newBook)
         })
         if (response.ok) {
-            fetchBooks()
+            await fetchBooks()
             title.value = ''
             author.value = ''
             year.value = ''
@@ -53,6 +54,7 @@ const postBook = async () => {
     }
 }
 </script>
+
 <template>
     <div>
         <input v-model="title" placeholder="Title" type="text" />
@@ -66,6 +68,7 @@ const postBook = async () => {
         </div>
     </div>
 </template>
+
 <style>
 #book-wrapper {
     display: grid;
